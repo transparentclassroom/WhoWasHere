@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe SparklinesController, type: :controller do
   let(:school_id) { 5 }
-  let(:user1) { User.create! email: 'one@gmail.com' }
-  let(:user2) { User.create! email: 'two@gmail.com' }
+  let(:user1) { User.create! }
+  let(:user2) { User.create! }
 
   def create_visit!(args)
     args[:school_id] = school_id
@@ -22,12 +22,12 @@ RSpec.describe SparklinesController, type: :controller do
       create_visit! user: user1, start_at: today - 1.day + 1.hour, seconds: 30.minutes
 
       get :index, params: { school_id: school_id,
-                            emails: [user1.email, 'foo@example.com'] }
+                            user_ids: [user1.id, -1] }
 
       expect(JSON.parse(response.body))
           .to eq(
-                  user1.email =>       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30.0, 0],
-                  'foo@example.com' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                  user1.id.to_s => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30.0, 0],
+                  -1.to_s => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
               )
     end
   end

@@ -6,10 +6,10 @@ class LogsController < ApplicationController
     parser = LogParser.new
     request.body.each do |line|
       if (json = parser.parse_line(line))
-        email, school_id, method, path = json['user'], json['school'], json['method'], json['path']
+        user_id, school_id, method, path = json['user_id'], json['school'], json['method'], json['path']
 
-        if email.present? && school_id.present? && method.present? && path.present?
-          user = User.find_or_create_by email: email
+        if user_id.present? && school_id.present? && method.present? && path.present?
+          user = User.find_or_create_by id: user_id
           Activity.log user, school_id, [method, path].join(' '), parser.last_time
         end
       end

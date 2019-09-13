@@ -3,5 +3,12 @@ Rails.application.routes.draw do
 
   resources :visits
   resources :logs
-  resources :sparklines
+
+  resources :schools do
+    resources :sparklines
+  end
+
+  resources :users do
+    resources :visits
+  end
 end

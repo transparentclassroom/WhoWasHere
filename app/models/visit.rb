@@ -31,21 +31,19 @@ class Visit < ApplicationRecord
   end
 
   SPARKLINE_WINDOW = 14 # in days
-  def self.sparkline_by_email(school_id, emails)
-    user_emails_by_id = Hash[User.where(email: emails).map{|u| [u.id, u.email]}]
+  def self.sparkline_by_user(school_id, user_ids)
     visits = Visit
                  .where(school_id: school_id)
-                 .where(user_id: user_emails_by_id.keys)
+                 .where(user_id: user_ids)
                  .select('user_id, sum(seconds) as seconds, date(start_at) as start_at')
                  .where('start_at >= ?', SPARKLINE_WINDOW.days.ago)
                  .group('start_at, user_id')
 
-    usage_by_user = Hash[emails.map { |id| [id, Array.new(SPARKLINE_WINDOW, 0)] }]
+    usage_by_user = user_ids.reduce({}) {|acc, id| acc[id.to_i] = Array.new(SPARKLINE_WINDOW, 0); acc }
     today = Time.zone.today
     visits.each do |visit|
       day = SPARKLINE_WINDOW - 1 - (today - visit.start_at.to_date)
-      user_id = user_emails_by_id[visit.user_id] || next
-      row = usage_by_user[user_id]
+      row = usage_by_user[visit.user_id]
       row[day] = visit.seconds / 60.0
     end
     usage_by_user
