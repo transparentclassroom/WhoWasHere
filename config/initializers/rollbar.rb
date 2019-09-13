@@ -8,6 +8,8 @@ Rollbar.configure do |config|
   if Rails.env.test?
     config.enabled = false
   end
+  # todo delete this line to turn on rollbar
+  config.enabled = false
 
   # By default, Rollbar will try to call the `current_user` controller method
   # to fetch the logged-in user object, and then call that object's `id`
