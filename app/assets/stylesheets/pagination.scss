@@ -1,0 +1,13 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  border-top: solid 1px silver;
+  padding-top: 8px;
+
+  > * {
+    padding: 8px 12px;
+  }
+  .page {
+
+  }
+}

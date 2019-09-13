@@ -2,8 +2,8 @@ class Activity < ApplicationRecord
   belongs_to :user
   belongs_to :visit, optional: true # optional, because activity is created first, and exists for a moment w/o a visit
 
-  def self.log(user, school_id, name)
-    activity = Activity.create!(user: user, school_id: school_id, name: name)
+  def self.log(user, school_id, name, time)
+    activity = Activity.create!(user: user, school_id: school_id, name: name, created_at: time)
     user.last_activity = activity
 
     if user.last_visit && user.last_visit.includes?(activity)

@@ -4,9 +4,10 @@ RSpec.describe Activity, type: :model do
   describe '.log' do
     let(:school_id) { 5 }
     let(:u) { User.create! email: 'bob@example.com' }
+    let(:time) { Time.new(2019, 10, 1, 5, 6, 7) }
 
     it 'should create an activity and associate it with a map / name' do
-      Activity.log u, school_id, 'Yelling at the kids'
+      Activity.log u, school_id, 'Yelling at the kids', time
 
       u.reload
       expect(u.last_activity.name).to eq('Yelling at the kids')
@@ -15,7 +16,7 @@ RSpec.describe Activity, type: :model do
     end
 
     it 'should create a visit on first log' do
-      Activity.log u, school_id, 'Flying'
+      Activity.log u, school_id, 'Flying', time
       u.reload
       visit = u.last_visit
       expect(visit.seconds).to eq(30)
@@ -24,52 +25,55 @@ RSpec.describe Activity, type: :model do
     end
 
     it 'should add to it as long as interval < visit::INTERVAL' do
-      now = Time.now - 1.day
+      start = now = Time.now - 1.day
 
-      allow(Time).to receive(:now).and_return(now)
-      one = Activity.log u, school_id, 'one'
+      # allow(Time).to receive(:now).and_return(now)
+      one = Activity.log u, school_id, 'one', now
       compare u.reload.last_visit, :start_at => now,
-              :stop_at => now,
-              :seconds => 30,
-              :start_activity => one,
-              :stop_activity => one
+              stop_at: now,
+              seconds: 30,
+              start_activity: one,
+              stop_activity: one
 
-      allow(Time).to receive(:now).and_return(now + 40.seconds)
-      two = Activity.log u, school_id, 'two'
-      compare u.reload.last_visit, :start_at => now,
-              :stop_at => now + 40.seconds,
-              :seconds => 30 + 40,
-              :start_activity => one,
-              :stop_activity => two
+      now += 40.seconds
+      # allow(Time).to receive(:now).and_return(now + 40.seconds)
+      two = Activity.log u, school_id, 'two', now
+      compare u.reload.last_visit,
+              start_at: start,
+              stop_at: now,
+              seconds: 30 + 40,
+              start_activity: one,
+              stop_activity: two
 
-      allow(Time).to receive(:now).and_return(now + 40.seconds + 55.seconds)
-      three = Activity.log u, school_id, 'three'
-      compare u.reload.last_visit, :start_at => now,
-              :stop_at => now + 40.seconds + 55.seconds,
-              :seconds => 30 + 40 + 55,
-              :start_activity => one,
-              :stop_activity => three
+      now += 55.seconds
+      # allow(Time).to receive(:now).and_return(now + 40.seconds + 55.seconds)
+      three = Activity.log u, school_id, 'three', now
+      compare u.reload.last_visit, :start_at => start,
+              stop_at: now,
+              seconds: 30 + 40 + 55,
+              start_activity: one,
+              stop_activity: three
     end
 
     it 'should create a new visit if interval > visit::INTERVAL' do
       now = Time.now - 1.day
 
-      allow(Time).to receive(:now).and_return(now)
-      one = Activity.log u, school_id, 'one'
+      # allow(Time).to receive(:now).and_return(now)
+      one = Activity.log u, school_id, 'one', now
       compare u.reload.last_visit, :start_at => now,
-              :stop_at => now,
-              :seconds => 30,
-              :start_activity => one,
-              :stop_activity => one
+              stop_at: now,
+              seconds: 30,
+              start_activity: one,
+              stop_activity: one
 
       later = now + Visit::INTERVAL + 31.second
-      allow(Time).to receive(:now).and_return(later)
-      two = Activity.log u, school_id, 'two'
+      # allow(Time).to receive(:now).and_return(later)
+      two = Activity.log u, school_id, 'two', later
       compare u.reload.last_visit, :start_at => later,
-              :stop_at => later,
-              :seconds => 30,
-              :start_activity => two,
-              :stop_activity => two
+              stop_at: later,
+              seconds: 30,
+              start_activity: two,
+              stop_activity: two
     end
 
     def zero_seconds(hash)

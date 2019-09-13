@@ -1,7 +1,7 @@
 require 'json'
 
 class LogParser
-  DATE_PATTERN = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[\d\.]{2,9}\+\d{2}:\d{2}'
+  DATE_PATTERN = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[\d\.]{2,9}[+-]\d{2}:\d{2}'
   REQUEST_ID_PATTERN = '\[\w{8}-\w{4}-\w{4}-\w{4}-\w{12}\]'
 
   attr_reader :last_time

@@ -1,0 +1,22 @@
+<h1>Visits</h1>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>Email</th>
+    <th>School</th>
+    <th>Duration</th>
+    <th>When</th>
+  </tr>
+  </thead>
+  <% @visits.each do |visit| %>
+  <tr>
+    <td><%= link_to visit.user.hidden_email, '#' %></td>
+    <td><%= link_to visit.school_id, '#' %></td>
+    <td><%= distance_of_time_in_words Time.now, visit.seconds.seconds.from_now %></td>
+    <td><%= time_ago_in_words visit.start_at %> ago</td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @visits %>

@@ -10,7 +10,7 @@ class LogsController < ApplicationController
 
         if email.present? && school_id.present? && method.present? && path.present?
           user = User.find_or_create_by email: email
-          Activity.log user, school_id, [method, path].join(' ')
+          Activity.log user, school_id, [method, path].join(' '), parser.last_time
         end
       end
     end
