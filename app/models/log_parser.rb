@@ -18,7 +18,11 @@ class LogParser
       request_content = $1.strip
       return nil unless request_content.start_with?('{') && request_content.end_with?('}')
 
-      JSON.parse(request_content)
+      begin
+        JSON.parse(request_content)
+      rescue JSON::ParserError
+        nil
+      end
 
     else
       raise "Can't parse #{line.inspect}"
