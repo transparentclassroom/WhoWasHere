@@ -1,0 +1,2 @@
+class SparklinesController < ApplicationController
+end
