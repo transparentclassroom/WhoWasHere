@@ -6,7 +6,7 @@ RSpec.describe LogParser do
 
   describe '#parse_line' do
     it 'should parse' do
-      log = <<-LOG
+      <<-SAMPLE_LOGS
 289 <190>1 2019-09-13T17:31:38.888083+00:00 host app worker.3 - I, [2019-09-13T17:31:38.547618 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] [paperclip] saving schools/373/2019/posts/efdec064b48657d383fed1eef42aaf69654771df.medium_square.jpg
 280 <190>1 2019-09-13T17:31:38.888085+00:00 host app worker.3 - I, [2019-09-13T17:31:38.590313 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] [paperclip] saving schools/373/2019/posts/efdec064b48657d383fed1eef42aaf69654771df.text.jpg
 281 <190>1 2019-09-13T17:31:38.888087+00:00 host app worker.3 - I, [2019-09-13T17:31:38.712898 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] [paperclip] saving schools/373/2019/posts/efdec064b48657d383fed1eef42aaf69654771df.large.jpg
@@ -30,7 +30,7 @@ RSpec.describe LogParser do
 424 <190>1 2019-09-13T17:32:44.283042+00:00 host app web.2 - I, [2019-09-13T17:32:40.781473 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] {\"method\":\"DELETE\",\"path\":\"/s/1164/posts/16011840.json\",\"format\":\"json\",\"controller\":\"PostsController\",\"action\":\"destroy\",\"status\":200,\"duration\":396.78,\"view\":0.39,\"db\":210.39,\"user\":\"valentina.marjin@mcs-nobleton.com\",\"school\":1164,\"params\":{\"school_id\":\"1164\",\"id\":\"16011840\"}}
 610 <190>1 2019-09-13T17:32:44.283044+00:00 host app web.2 - I, [2019-09-13T17:32:41.180058 #36]  INFO -- : [8a52ea83-ff12-4dc6-a6a2-9cffa1895a36] {\"method\":\"PUT\",\"path\":\"/s/370/classrooms/1060/levels.json\",\"format\":\"json\",\"controller\":\"Classrooms::LevelsController\",\"action\":\"update\",\"status\":200,\"duration\":142.59,\"view\":0.24,\"db\":100.02,\"user\":\"gaustin@guidepostmontessori.com\",\"school\":370,\"params\":{\"changes\":{\"251944\":{\"21345\":{\"id\":5743475,\"planned_position\":3,\"planned_date\":\"2019-09-11\",\"note\":\"\",\"planned\":true}}},\"log\":\"lesson-plan-save-lesson-card\",\"school_id\":\"370\",\"classroom_id\":\"1060\",\"level\":{}}}
 386 <190>1 2019-09-13T17:32:44.283045+00:00 host app web.2 - I, [2019-09-13T17:32:41.565847 #36]  INFO -- : [7c03015c-8f96-4ec4-a179-d89824e167a9] {\"method\":\"GET\",\"path\":\"/s/1521/dashboard\",\"format\":\"html\",\"controller\":\"DashboardController\",\"action\":\"show\",\"status\":200,\"duration\":263.93,\"view\":59.97,\"db\":177.33,\"user\":\"abaranwal@deloitte.com\",\"school\":1521,\"params\":{\"school_id\":\"1521\"}}
-      LOG
+      SAMPLE_LOGS
     end
 
     it 'should parse json and return it along w/ the date' do
@@ -61,6 +61,8 @@ RSpec.describe LogParser do
       log = "139 <190>1 2019-09-13T20:01:06.084678+00:00 host app web.2 - /app/app/views/posts/_posts.html.erb:13: warning: constant ::Fixnum is deprecated"
       expect(parser.parse_line(log)).to eq nil
       log = "142 <172>1 2019-09-13T20:01:06+00:00 host heroku logplex - Error L10 (output buffer overflow): 1 messages dropped since 2019-09-13T20:01:04+00:00.285 <190>1 2019-09-13T20:01:06.019716+00:00 host app worker.2 - I, [2019-09-13T20:01:04.929727 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [ee8006e4-f626-44c3-8162-f1dba5ed6d02] [paperclip] saving schools/365/2019/posts/a6b440efe983d7adaae21fb19a3bae1ef94d9e75.original.jpeg"
+      expect(parser.parse_line(log)).to eq nil
+      log = "652 <134>1 2019-09-13T21:57:28+00:00 host app heroku-postgres - source=HEROKU_POSTGRESQL_COPPER addon=postgresql-lively-20360 sample#current_transaction=802374110 sample#db_size=113931017351bytes sample#tables=67 sample#active-connections=36 sample#waiting-connections=0 sample#index-cache-hit-rate=0.98938 sample#table-cache-hit-rate=0.87102 sample#load-avg-1m=0.345 sample#load-avg-5m=0.41 sample#load-avg-15m=0.465 sample#read-iops=63.213 sample#write-iops=17.393 sample#tmp-disk-used=33849344 sample#tmp-disk-available=72944943104 sample#memory-total=15657108kB sample#memory-free=96208kB sample#memory-cached=14631188kB sample#memory-postgres=299560kB"
       expect(parser.parse_line(log)).to eq nil
     end
   end

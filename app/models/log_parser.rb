@@ -7,11 +7,11 @@ class LogParser
   attr_reader :last_time
 
   def parse_line(line)
-    if line =~ /^\d+ <\d+>\d+ (#{DATE_PATTERN}) (\w+) (\w+) ([\w.]+) - (.+)$/
+    if line =~ /^\d+ <\d+>\d+ (#{DATE_PATTERN}) (\w+) (\w+) ([\w.-]+) - (.+)$/
       @last_time, host, app, proc, content = $1, $2, $3, $4, $5
 
       return nil if app == 'heroku'
-      return nil if proc.start_with?('worker')
+      return nil unless proc.start_with?('web')
 
       return nil unless content =~ /#{REQUEST_ID_PATTERN} (.+)$/
 
