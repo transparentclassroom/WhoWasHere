@@ -1,0 +1,3 @@
+git push heroku
+heroku run rails db:migrate
+say 'Who Was Here is There'

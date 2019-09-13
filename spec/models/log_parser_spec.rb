@@ -58,6 +58,10 @@ RSpec.describe LogParser do
       expect(parser.parse_line(log)).to eq nil
       log = "242 <190>1 2019-09-13T17:32:44.283028+00:00 host app web.2 - I, [2019-09-13T17:32:40.579654 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.original.jpg"
       expect(parser.parse_line(log)).to eq nil
+      log = "139 <190>1 2019-09-13T20:01:06.084678+00:00 host app web.2 - /app/app/views/posts/_posts.html.erb:13: warning: constant ::Fixnum is deprecated"
+      expect(parser.parse_line(log)).to eq nil
+      log = "142 <172>1 2019-09-13T20:01:06+00:00 host heroku logplex - Error L10 (output buffer overflow): 1 messages dropped since 2019-09-13T20:01:04+00:00.285 <190>1 2019-09-13T20:01:06.019716+00:00 host app worker.2 - I, [2019-09-13T20:01:04.929727 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [ee8006e4-f626-44c3-8162-f1dba5ed6d02] [paperclip] saving schools/365/2019/posts/a6b440efe983d7adaae21fb19a3bae1ef94d9e75.original.jpeg"
+      expect(parser.parse_line(log)).to eq nil
     end
   end
 end
