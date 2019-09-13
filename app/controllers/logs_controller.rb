@@ -6,12 +6,16 @@ class LogsController < ApplicationController
     parser = LogParser.new
     request.body.each do |line|
       if (json = parser.parse_line(line))
-        user_id, school_id, method, path = json['user_id'], json['school'], json['method'], json['path']
+        user_id, school_id, method, path = json['user_id'], json['school_id'], json['method'], json['path']
 
         if user_id.present? && school_id.present? && method.present? && path.present?
           user = User.find_or_create_by id: user_id
           Activity.log user, school_id, [method, path].join(' '), parser.last_time
+        else
+          Rails.logger.debug("no user/school/method/path '#{line[0..50]}'")
         end
+      else
+        Rails.logger.debug("skipping '#{line[0..50]}'")
       end
     end
     head :ok
