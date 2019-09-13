@@ -1,4 +1,5 @@
-require 'rails_helper'
+require 'spec_helper'
+require_relative '../../app/models/log_parser'
 
 RSpec.describe LogParser do
   let(:parser) { LogParser.new }
@@ -20,10 +21,10 @@ RSpec.describe LogParser do
 320 <190>1 2019-09-13T17:31:38.894329+00:00 host app worker.3 - I, [2019-09-13T17:31:38.894098 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [eed7b9b4-88df-4552-aa0c-d16514ee46b4] Command :: identify -format '%wx%h,%[exif:orientation]' '/tmp/cb803fb775c7cc0961b14131ec78bf5220190913-4-yrxt9e.jpg[0]' 2>/dev/null
 283 <190>1 2019-09-13T17:31:38.939797+00:00 host app worker.3 - I, [2019-09-13T17:31:38.939440 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [eed7b9b4-88df-4552-aa0c-d16514ee46b4] Command :: identify -format %m '/tmp/cb803fb775c7cc0961b14131ec78bf5220190913-4-yrxt9e.jpg[0]'
 374 <190>1 2019-09-13T17:31:38.949095+00:00 host app worker.3 - I, [2019-09-13T17:31:38.948722 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [eed7b9b4-88df-4552-aa0c-d16514ee46b4] Command :: convert -auto-orient '/tmp/cb803fb775c7cc0961b14131ec78bf5220190913-4-yrxt9e.jpg[0]' -auto-orient -resize \"3264x3264\" '/tmp/32ad8484817257547aadd8362e07625320190913-4-fjf26m'
-377 <190>1 2019-09-13T17:32:44.283026+00:00 host app web.2 - I, [2019-09-13T17:32:40.048706 #36]  INFO -- : [2437a15b-3e78-4490-9452-2462011d3484] {\"method\":\"GET\",\"path\":\"/s/973/dashboard\",\"format\":\"html\",\"controller\":\"DashboardController\",\"action\":\"show\",\"status\":200,\"duration\":370.1,\"view\":88.66,\"db\":257.4,\"user\":\"floey620@gmail.com\",\"school\":973,\"params\":{\"school_id\":\"973\"}}
+377 <190>1 2019-09-13T17:32:44.283026+00:00 host app web.2 - I, [2019-09-13T17:32:40.048706 #36]  INFO -- : [2437a15b-3e78-4490-9452-2462011d3484] {\"method\":\"GET\",\"path\":\"/s/973/dashboard\",\"format\":\"html\",\"controller\":\"DashboardController\",\"action\":\"show\",\"status\":200,\"duration\":370.1,\"view\":88.66,\"db\":257.4,\"user\":\"flow.test@gmail.com\",\"school\":973,\"params\":{\"school_id\":\"973\"}}
 242 <190>1 2019-09-13T17:32:44.283028+00:00 host app web.2 - I, [2019-09-13T17:32:40.579654 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.original.jpg
 247 <190>1 2019-09-13T17:32:44.283030+00:00 host app web.2 - I, [2019-09-13T17:32:40.595389 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.medium_square.jpg
-467 <190>1 2019-09-13T17:32:44.283037+00:00 host app web.2 - I, [2019-09-13T17:32:40.612675 #36]  INFO -- : [3b45e5b2-7cc8-4fb4-8d2f-26c3587bc736] {\"method\":\"GET\",\"path\":\"/s/369/classrooms/2313/events.json\",\"format\":\"json\",\"controller\":\"EventsController\",\"action\":\"index\",\"status\":200,\"duration\":135.07,\"view\":0.25,\"db\":102.07,\"user\":\"kmcintosh@guidepostmontessori.com\",\"school\":369,\"params\":{\"since\":\"2019-09-13T13:31:36-04:00\",\"school_id\":\"369\",\"classroom_id\":\"2313\"}}
+467 <190>1 2019-09-13T17:32:44.283037+00:00 host app web.2 - I, [2019-09-13T17:32:40.612675 #36]  INFO -- : [3b45e5b2-7cc8-4fb4-8d2f-26c3587bc736] {\"method\":\"GET\",\"path\":\"/s/369/classrooms/2313/events.json\",\"format\":\"json\",\"controller\":\"EventsController\",\"action\":\"index\",\"status\":200,\"duration\":135.07,\"view\":0.25,\"db\":102.07,\"user\":\"kmc@gmail.com\",\"school\":369,\"params\":{\"since\":\"2019-09-13T13:31:36-04:00\",\"school_id\":\"369\",\"classroom_id\":\"2313\"}}
 238 <190>1 2019-09-13T17:32:44.283039+00:00 host app web.2 - I, [2019-09-13T17:32:40.620812 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.text.jpg
 239 <190>1 2019-09-13T17:32:44.283040+00:00 host app web.2 - I, [2019-09-13T17:32:40.640495 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.large.jpg
 424 <190>1 2019-09-13T17:32:44.283042+00:00 host app web.2 - I, [2019-09-13T17:32:40.781473 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] {\"method\":\"DELETE\",\"path\":\"/s/1164/posts/16011840.json\",\"format\":\"json\",\"controller\":\"PostsController\",\"action\":\"destroy\",\"status\":200,\"duration\":396.78,\"view\":0.39,\"db\":210.39,\"user\":\"valentina.marjin@mcs-nobleton.com\",\"school\":1164,\"params\":{\"school_id\":\"1164\",\"id\":\"16011840\"}}
@@ -33,7 +34,7 @@ RSpec.describe LogParser do
     end
 
     it 'should parse json and return it along w/ the date' do
-      log = "467 <190>1 2019-09-13T17:32:44.283037+00:00 host app web.2 - I, [2019-09-13T17:32:40.612675 #36]  INFO -- : [3b45e5b2-7cc8-4fb4-8d2f-26c3587bc736] {\"method\":\"GET\",\"path\":\"/s/369/classrooms/2313/events.json\",\"format\":\"json\",\"controller\":\"EventsController\",\"action\":\"index\",\"status\":200,\"duration\":135.07,\"view\":0.25,\"db\":102.07,\"user\":\"kmcintosh@guidepostmontessori.com\",\"school\":369,\"params\":{\"since\":\"2019-09-13T13:31:36-04:00\",\"school_id\":\"369\",\"classroom_id\":\"2313\"}}"
+      log = "467 <190>1 2019-09-13T17:32:44.283037+00:00 host app web.2 - I, [2019-09-13T17:32:40.612675 #36]  INFO -- : [3b45e5b2-7cc8-4fb4-8d2f-26c3587bc736] {\"method\":\"GET\",\"path\":\"/s/369/classrooms/2313/events.json\",\"format\":\"json\",\"controller\":\"EventsController\",\"action\":\"index\",\"status\":200,\"duration\":135.07,\"view\":0.25,\"db\":102.07,\"user\":\"kmc@gmail.com\",\"school\":369,\"params\":{\"since\":\"2019-09-13T13:31:36-04:00\",\"school_id\":\"369\",\"classroom_id\":\"2313\"}}"
       json = { 'method' => 'GET',
                'path' => '/s/369/classrooms/2313/events.json',
                'format' => 'json',
@@ -43,20 +44,20 @@ RSpec.describe LogParser do
                'duration' => 135.07,
                'view' => 0.25,
                'db' => 102.07,
-               'user' => 'kmcintosh@guidepostmontessori.com',
+               'user' => 'kmc@gmail.com',
                'school' => 369,
                'params' => { 'since' => '2019-09-13T13:31:36-04:00', 'school_id' => '369', 'classroom_id' => '2313' } }
-      expec(parser.parse_line(log)).to eq(json)
-      expec(parser.last_time).to eq('2019-09-13T17:32:44.283037+00:00')
+      expect(parser.parse_line(log)).to eq(json)
+      expect(parser.last_time).to eq('2019-09-13T17:32:44.283037+00:00')
     end
 
     it 'should ignore invalid lines' do
       log = "289 <190>1 2019-09-13T17:31:38.888083+00:00 host app worker.3 - I, [2019-09-13T17:31:38.547618 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] [paperclip] saving schools/373/2019/posts/efdec064b48657d383fed1eef42aaf69654771df.medium_square.jpg"
-      expec(parser.parse_line(log)).to eq nil
+      expect(parser.parse_line(log)).to eq nil
       log = "316 <190>1 2019-09-13T17:31:38.888092+00:00 host app worker.3 - [Worker(host:07d519a5-bd8f-4b1d-bea4-647e7d5f7f74 pid:4)] Job DelayedPaperclip::ProcessJob [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] from DelayedJob(paperclip) with arguments: [\"Post\", 16013002, \"photo\"] (id=19830701) (queue=paperclip) COMPLETED after 5.7279"
-      expec(parser.parse_line(log)).to eq nil
+      expect(parser.parse_line(log)).to eq nil
       log = "242 <190>1 2019-09-13T17:32:44.283028+00:00 host app web.2 - I, [2019-09-13T17:32:40.579654 #36]  INFO -- : [20c78949-8157-4d91-813c-9f0e403ec636] [paperclip] deleting schools/1164/2019/posts/fa0ae86ec681c26cc853611ef43fb1f887d24289.original.jpg"
-      expec(parser.parse_line(log)).to eq nil
+      expect(parser.parse_line(log)).to eq nil
     end
   end
 end

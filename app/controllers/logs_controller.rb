@@ -1,11 +1,19 @@
 class LogsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create
-  http_basic_authenticate_with name: ENV['WHOWASHERE_USER'],
-                               password: ENV['WHOWASHERE_PASSWORD'],
-                               only: :create
+  http_basic_authenticate_with BASIC_AUTH.merge(only: :create)
 
   def create
-    Rails.logger.warn "log(#{request.body.read.inspect})"
+    parser = LogParser.new
+    request.body.each do |line|
+      if (json = parser.parse_line(line))
+        email, school_id, method, path = json['user'], json['school'], json['method'], json['path']
+
+        if email.present? && school_id.present? && method.present? && path.present?
+          user = User.find_or_create_by email: email
+          Activity.log user, school_id, [method, path].join(' ')
+        end
+      end
+    end
     head :ok
   end
 end
