@@ -12,10 +12,10 @@ class LogsController < ApplicationController
           user = User.find_or_create_by id: user_id
           Activity.log user, school_id, [method, path].join(' '), parser.last_time
         else
-          Rails.logger.debug("no user/school/method/path '#{line[0..100]}'")
+          Rails.logger.debug("no user/school/method/path '#{line[0..200]}'")
         end
       else
-        Rails.logger.debug("skipping '#{line[0..100]}'")
+        Rails.logger.debug("skipping '#{line[0..200]}'")
       end
     end
     head :ok
