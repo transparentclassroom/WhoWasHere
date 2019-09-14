@@ -22,7 +22,7 @@ RSpec.describe SparklinesController, type: :controller do
       create_visit! user: user1, start_at: today - 1.day + 1.hour, seconds: 30.minutes
 
       get :index, params: { school_id: school_id,
-                            user_ids: [user1.id, -1] }
+                            ids: [user1.id, -1] }
 
       expect(JSON.parse(response.body))
           .to eq(
