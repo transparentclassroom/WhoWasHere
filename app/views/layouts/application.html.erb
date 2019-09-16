@@ -11,7 +11,9 @@
 
 <body>
 <nav>
-  Welcome <%= current_admin.name %>, (<%= link_to "Logout", "/logout" %>)
+  <%- if current_admin.authenticated? %>
+    Welcome <%= current_admin.name %>, (<%= link_to "Logout", "/logout" %>)
+  <%- end %>
 </nav>
 <div class="container">
   <br>

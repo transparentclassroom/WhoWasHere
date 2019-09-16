@@ -5,8 +5,8 @@ class Admin
     self.name = name
   end
 
-  def self.authenticate(auth_hash:, session:)
-    admin = new(email: auth_hash.info.email, name: auth_hash.info.name)
+  def self.authenticate(info:, session:)
+    admin = new(email: info.email, name: info.name)
     raise NotAuthorizedError unless admin.transparent_classroom_employee?
     session[:current_user_email] = admin.email
     session[:current_user_name] = admin.name
@@ -14,12 +14,16 @@ class Admin
   end
 
   def self.from_session(session:)
-    new(email: session[:current_user_email], name: session[:current_user_name])
+    if session[:current_user_email]
+      new(email: session[:current_user_email], name: session[:current_user_name])
+    else
+      UnauthenticatedAdmin.new
+    end
   end
 
   def self.logout(session:)
-    session[:current_user_name] = nil
-    session[:current_user_email] = nil
+    session.delete(:current_user_name)
+    session.delete(:current_user_email)
   end
 
   def transparent_classroom_employee?
@@ -36,5 +40,9 @@ class Admin
 
   def eql?(other)
     self == other
+  end
+
+  def authenticated?
+    true
   end
 end
