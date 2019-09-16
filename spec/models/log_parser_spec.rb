@@ -64,6 +64,10 @@ RSpec.describe LogParser do
       expect(parser.parse_line(log)).to eq nil
       log = "652 <134>1 2019-09-13T21:57:28+00:00 host app heroku-postgres - source=HEROKU_POSTGRESQL_COPPER addon=postgresql-lively-20360 sample#current_transaction=802374110 sample#db_size=113931017351bytes sample#tables=67 sample#active-connections=36 sample#waiting-connections=0 sample#index-cache-hit-rate=0.98938 sample#table-cache-hit-rate=0.87102 sample#load-avg-1m=0.345 sample#load-avg-5m=0.41 sample#load-avg-15m=0.465 sample#read-iops=63.213 sample#write-iops=17.393 sample#tmp-disk-used=33849344 sample#tmp-disk-available=72944943104 sample#memory-total=15657108kB sample#memory-free=96208kB sample#memory-cached=14631188kB sample#memory-postgres=299560kB"
       expect(parser.parse_line(log)).to eq nil
+      log = "61 <190>1 2019-09-14T18:04:37.869522+00:00 host app worker.1 - "
+      expect(parser.parse_line(log)).to eq nil
+      log = "67 <190>1 2019-09-14T08:32:02.939253+00:00 host app scheduler.6161 - "
+      expect(parser.parse_line(log)).to eq nil
     end
 
     it 'should handle JSON parse errors' do
