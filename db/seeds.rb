@@ -1,5 +1,5 @@
-users = 40.times.map do |i|
-  User.create! email: "user#{i}@example.com"
+users = 40.times.map do |id|
+  User.create! id: id
 end
 
 school_ids = (30..70).to_a

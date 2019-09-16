@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe SparklinesController, type: :controller do
   let(:school_id) { 5 }
-  let(:user1) { User.create! }
-  let(:user2) { User.create! }
+  let(:user1) { FactoryBot.create(:user) }
+  let(:user2) { FactoryBot.create(:user) }
 
   def create_visit!(args)
     args[:school_id] = school_id

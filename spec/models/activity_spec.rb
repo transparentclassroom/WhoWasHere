@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Activity, type: :model do
   describe '.log' do
     let(:school_id) { 5 }
-    let(:u) { User.create! }
+    let(:u) { FactoryBot.create(:user) }
     let(:time) { Time.new(2019, 10, 1, 5, 6, 7) }
 
     it 'should create an activity and associate it with a map / name' do
