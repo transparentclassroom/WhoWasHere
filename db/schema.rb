@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_182623) do
+ActiveRecord::Schema.define(version: 2019_09_16_163826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,11 +24,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_182623) do
     t.datetime "created_at"
     t.index ["user_id", "activity_type"], name: "index_activities_on_user_id_and_activity_type"
     t.index ["visit_id"], name: "index_activities_on_visit_id"
-  end
-
-  create_table "admins", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", id: :bigint, default: nil, force: :cascade do |t|
@@ -46,5 +41,4 @@ ActiveRecord::Schema.define(version: 2019_09_16_182623) do
     t.integer "stop_activity_id"
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
-
 end
