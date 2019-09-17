@@ -16,8 +16,6 @@ RSpec.describe Visit, type: :model do
 
   describe "sparkline_by_user" do
     it "should return minutes per day" do
-      Time.zone = "UTC"
-
       today = Time.zone.today
 
       create_visit! user: user1, start_at: today - 1.day + 1.hour, seconds: 30.minutes

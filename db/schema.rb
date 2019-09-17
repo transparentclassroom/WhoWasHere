@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_163826) do
+ActiveRecord::Schema.define(version: 2019_09_17_183105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,10 @@ ActiveRecord::Schema.define(version: 2019_09_16_163826) do
     t.integer "seconds"
     t.integer "start_activity_id"
     t.integer "stop_activity_id"
+    t.jsonb "activities", default: [], null: false
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
+
 end

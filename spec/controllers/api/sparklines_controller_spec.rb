@@ -7,8 +7,6 @@ RSpec.describe Api::SparklinesController, type: :controller do
 
   describe "#index" do
     it "should return several sparklines" do
-      Time.zone = "UTC"
-
       today = Time.zone.today
 
       Visit.create! user: user1, activities: [Activity.new(timestamp: today - 1.day + 1.hour)], seconds: 30.minutes.to_i

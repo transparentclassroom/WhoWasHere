@@ -36,6 +36,7 @@ class Visit < ApplicationRecord
   end
 
   def start_or_append(activity)
+    byebug
     return append(activity) if covers?(activity)
     Visit.start(user, activity)
   end

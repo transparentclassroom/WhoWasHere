@@ -4,7 +4,7 @@ RSpec.describe Activity, type: :model do
   describe ".log" do
     let(:school_id) { 5 }
     let(:u) { FactoryBot.create(:user) }
-    let(:time) { Time.new(2019, 10, 1, 5, 6, 7) }
+    let(:time) { Time.zone.new(2019, 10, 1, 5, 6, 7) }
 
     it "creates an activitiy within a visit associated to the school and user" do
       activity = (Activity.log u, school_id, "Yelling at the kids", time)
@@ -34,7 +34,7 @@ RSpec.describe Activity, type: :model do
     end
 
     it "should add to it as long as interval < visit::INTERVAL" do
-      start = now = Time.now - 1.day
+      start = now = Time.zone.now - 1.day
 
       one = Activity.log u, school_id, "one", now
       visit = u.reload.last_visit
@@ -74,9 +74,8 @@ RSpec.describe Activity, type: :model do
     end
 
     it "should create a new visit if interval > visit::INTERVAL" do
-      now = Time.now - 1.day
+      now = Time.zone.now - 1.day
 
-      # allow(Time).to receive(:now).and_return(now)
       one = Activity.log u, school_id, "one", now
       visit = u.reload.last_visit
       aggregate_failures do
@@ -88,7 +87,6 @@ RSpec.describe Activity, type: :model do
       end
 
       later = now + Visit::INTERVAL + 31.second
-      # allow(Time).to receive(:now).and_return(later)
       two = Activity.log u, school_id, "two", later
 
       visit = u.reload.last_visit

@@ -1,8 +1,7 @@
 class User < ApplicationRecord
   has_many :visits
-  belongs_to :last_visit, class_name: "Visit", optional: true
 
   def last_visit
-    super || Visit.new(user: self, activities: [])
+    @last_visit ||= (self.visits.order(created_at: :desc).limit(1).first || Visit.new(user: self, activities: []))
   end
 end
