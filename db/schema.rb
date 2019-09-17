@@ -41,5 +41,4 @@ ActiveRecord::Schema.define(version: 2019_09_16_163826) do
     t.integer "stop_activity_id"
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
-
 end

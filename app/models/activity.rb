@@ -6,7 +6,7 @@ class Activity < ApplicationRecord
     activity = Activity.create!(user: user, school_id: school_id, name: name, created_at: time)
     user.last_activity = activity
 
-    if user.last_visit && user.last_visit.includes?(activity)
+    if user.last_visit&.includes?(activity)
       user.last_visit.append(activity)
     else
       user.last_visit = Visit.start(user, activity)
@@ -26,14 +26,14 @@ class Activity < ApplicationRecord
   private
 
   def calc_activity_type(value)
-    value.gsub(/\?(.*)/) do
+    value.gsub(/\?(.*)/) {
       if $1 =~ /^log=([^&]+)/
         "##{$1}"
       else
-        ''
+        ""
       end
-    end
-        .gsub(/ \/s\/\d+\//, ' /')
-        .gsub(/\d+/, 'X')
+    }
+      .gsub(/ \/s\/\d+\//, " /")
+      .gsub(/\d+/, "X")
   end
 end

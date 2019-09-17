@@ -1,10 +1,10 @@
-users = 40.times.map do |id|
+users = 40.times.map { |id|
   User.create! id: id
-end
+}
 
 school_ids = (30..70).to_a
 
-methods = %w(GET GET GET GET GET POST PUT DELETE)
+methods = %w[GET GET GET GET GET POST PUT DELETE]
 
 seconds = (0..10).to_a + [1000]
 

@@ -10,6 +10,11 @@
 </head>
 
 <body>
+<nav>
+  <%- if current_admin.authenticated? %>
+    Welcome <%= current_admin.name %>, (<%= link_to "Logout", "/logout" %>)
+  <%- end %>
+</nav>
 <div class="container">
   <br>
   <% if flash[:notice] %>
