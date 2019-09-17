@@ -9,8 +9,8 @@ RSpec.describe Visit, type: :model do
   def create_visit!(args)
     args[:school_id] = school_id
     args[:seconds] = args[:seconds].to_i
-    args[:start_activity] ||= Activity.create! school_id: school_id, user: args[:user], name: "bob"
-    args[:stop_activity] ||= args[:start_activity]
+    start_at = args.delete(:start_at)
+    args[:activities] = [Activity.new(timestamp: start_at)] if start_at
     Visit.create! args
   end
 

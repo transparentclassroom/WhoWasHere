@@ -6,53 +6,71 @@ RSpec.describe Activity, type: :model do
     let(:u) { FactoryBot.create(:user) }
     let(:time) { Time.new(2019, 10, 1, 5, 6, 7) }
 
-    it "should create an activity and associate it with a map / name" do
-      Activity.log u, school_id, "Yelling at the kids", time
+    it "creates an activitiy within a visit associated to the school and user" do
+      activity = (Activity.log u, school_id, "Yelling at the kids", time)
 
-      u.reload
-      expect(u.last_activity.name).to eq("Yelling at the kids")
-      expect(u.last_activity.school_id).to eq(school_id)
-      expect(u.last_activity.visit).to eq(u.last_visit)
+      aggregate_failures do
+        expect(activity.name).to eq("Yelling at the kids")
+        expect(activity.school_id).to eq(school_id)
+
+        u.reload
+
+        expect(u.last_visit).to be_present
+        expect(u.last_visit.activities).to include(activity)
+        expect(u.last_visit.start_activity).to eql(activity)
+        expect(u.last_visit.stop_activity).to eql(activity)
+      end
     end
 
     it "should create a visit on first log" do
-      Activity.log u, school_id, "Flying", time
+      activity = Activity.log u, school_id, "Flying", time
+
       u.reload
       visit = u.last_visit
+
       expect(visit.seconds).to eq(30)
-      expect(visit.start_activity).to eq(u.last_activity)
-      expect(visit.stop_activity).to eq(u.last_activity)
+      expect(visit.start_activity).to eq(actvity)
+      expect(visit.stop_activity).to eq(actvity)
     end
 
     it "should add to it as long as interval < visit::INTERVAL" do
       start = now = Time.now - 1.day
 
-      # allow(Time).to receive(:now).and_return(now)
       one = Activity.log u, school_id, "one", now
-      compare u.reload.last_visit, start_at: now,
-                                   stop_at: now,
-                                   seconds: 30,
-                                   start_activity: one,
-                                   stop_activity: one
+      visit = u.reload.last_visit
+      aggregate_failures do
+        expect(visit.start_at).to eql(one.timestamp)
+        expect(visit.stop_at).to eql(one.timestamp)
+        expect(visit.seconds).to eql(30)
+        expect(visit.start_activity).to eql(one)
+        expect(visit.stop_activity).to eql(one)
+      end
 
       now += 40.seconds
-      # allow(Time).to receive(:now).and_return(now + 40.seconds)
+
       two = Activity.log u, school_id, "two", now
-      compare u.reload.last_visit,
-              start_at: start,
-              stop_at: now,
-              seconds: 30 + 40,
-              start_activity: one,
-              stop_activity: two
+
+      visit = u.reload.last_visit
+
+      aggregate_failures do
+        expect(visit.start_at).to eql(one.timestamp)
+        expect(visit.stop_at).to eql(two.timestamp)
+        expect(visit.seconds).to eql(30 + 40)
+        expect(visit.start_activity).to eql(one)
+        expect(visit.stop_activity).to eql(two)
+      end
 
       now += 55.seconds
-      # allow(Time).to receive(:now).and_return(now + 40.seconds + 55.seconds)
       three = Activity.log u, school_id, "three", now
-      compare u.reload.last_visit, start_at: start,
-                                   stop_at: now,
-                                   seconds: 30 + 40 + 55,
-                                   start_activity: one,
-                                   stop_activity: three
+      visit = u.reload.last_visit
+
+      aggregate_failures do
+        expect(visit.start_at).to eql(one.timestamp)
+        expect(visit.stop_at).to eql(three.timestamp)
+        expect(visit.seconds).to eql(30 + 40 + 55)
+        expect(visit.start_activity).to eql(one)
+        expect(visit.stop_activity).to eql(three)
+      end
     end
 
     it "should create a new visit if interval > visit::INTERVAL" do
@@ -60,29 +78,27 @@ RSpec.describe Activity, type: :model do
 
       # allow(Time).to receive(:now).and_return(now)
       one = Activity.log u, school_id, "one", now
-      compare u.reload.last_visit, start_at: now,
-                                   stop_at: now,
-                                   seconds: 30,
-                                   start_activity: one,
-                                   stop_activity: one
+      visit = u.reload.last_visit
+      aggregate_failures do
+        expect(visit.start_at).to eql(one.timestamp)
+        expect(visit.stop_at).to eql(one.timestamp)
+        expect(visit.seconds).to eql(30)
+        expect(visit.start_activity).to eql(one)
+        expect(visit.stop_activity).to eql(one)
+      end
 
       later = now + Visit::INTERVAL + 31.second
       # allow(Time).to receive(:now).and_return(later)
       two = Activity.log u, school_id, "two", later
-      compare u.reload.last_visit, start_at: later,
-                                   stop_at: later,
-                                   seconds: 30,
-                                   start_activity: two,
-                                   stop_activity: two
-    end
 
-    def zero_seconds(hash)
-      hash.map { |k, v| [k, v.respond_to?(:change) ? v.change(sec: 0) : v] }.to_h
-    end
-
-    def compare(obj, expected)
-      actual = zero_seconds(expected.map { |k, v| [k, obj.send(k)] })
-      expect(actual).to eq(zero_seconds(expected))
+      visit = u.reload.last_visit
+      aggregate_failures do
+        expect(visit.start_at).to eql(two.timestamp)
+        expect(visit.stop_at).to eql(two.timestamp)
+        expect(visit.seconds).to eql(30)
+        expect(visit.start_activity).to eql(two)
+        expect(visit.stop_activity).to eql(two)
+      end
     end
   end
 

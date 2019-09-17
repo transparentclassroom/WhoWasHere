@@ -5,21 +5,13 @@ RSpec.describe Api::SparklinesController, type: :controller do
   let(:user1) { FactoryBot.create(:user) }
   let(:user2) { FactoryBot.create(:user) }
 
-  def create_visit!(args)
-    args[:school_id] = school_id
-    args[:seconds] = args[:seconds].to_i
-    args[:start_activity] ||= Activity.create! school_id: school_id, user: args[:user], name: "bob"
-    args[:stop_activity] ||= args[:start_activity]
-    Visit.create! args
-  end
-
   describe "#index" do
     it "should return several sparklines" do
       Time.zone = "UTC"
 
       today = Time.zone.today
 
-      create_visit! user: user1, start_at: today - 1.day + 1.hour, seconds: 30.minutes
+      Visit.create! user: user1, activities: [Activity.new(timestamp: today - 1.day + 1.hour)], seconds: 30.minutes.to_i
 
       get :index, params: {school_id: school_id,
                            ids: [user1.id, -1],}

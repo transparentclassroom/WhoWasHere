@@ -11,8 +11,6 @@ RSpec.describe LogsController, type: :controller do
     it "should record activity" do
       http_login
 
-      expect(Activity.count).to eq 0
-
       log = <<~LOG
         374 <190>1 2019-09-13T17:31:38.949095+00:00 host app worker.3 - I, [2019-09-13T17:31:38.948722 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [eed7b9b4-88df-4552-aa0c-d16514ee46b4] Command :: convert -auto-orient '/tmp/cb803fb775c7cc0961b14131ec78bf5220190913-4-yrxt9e.jpg[0]' -auto-orient -resize \"3264x3264\" '/tmp/32ad8484817257547aadd8362e07625320190913-4-fjf26m'
         377 <190>1 2019-09-13T17:32:44.283026+00:00 host app web.2 - I, [2019-09-13T17:32:40.048706 #36]  INFO -- : [2437a15b-3e78-4490-9452-2462011d3484] {\"method\":\"GET\",\"path\":\"/s/973/dashboard\",\"format\":\"html\",\"controller\":\"DashboardController\",\"action\":\"show\",\"status\":200,\"duration\":370.1,\"view\":88.66,\"db\":257.4,\"user_id\":\"55\",\"school_id\":973,\"params\":{\"school_id\":\"973\"}}
@@ -24,14 +22,15 @@ RSpec.describe LogsController, type: :controller do
 
       expect(response).to be_successful
 
-      activities = Activity.all
-      expect(activities.length).to eq 2
-      expect(activities[0].user_id).to eq(55)
-      expect(activities[0].name).to eq("GET /s/973/dashboard")
-      expect(activities[0].school_id).to eq(973)
-      expect(activities[1].user_id).to eq(66)
-      expect(activities[1].name).to eq("GET /s/369/classrooms/2313/events.json")
-      expect(activities[1].school_id).to eq(369)
+      visits = Visit.all
+      byebug
+      expect(visits.length).to eq 2
+      expect(visits[0].user_id).to eq(55)
+      expect(visits[0].activities.most_recent.name).to eq("GET /s/973/dashboard")
+      expect(visits[0].school_id).to eq(973)
+      expect(visits[1].user_id).to eq(66)
+      expect(visits[1].activities.most_recent.name).to eq("GET /s/369/classrooms/2313/events.json")
+      expect(visits[1].school_id).to eq(369)
     end
   end
 end

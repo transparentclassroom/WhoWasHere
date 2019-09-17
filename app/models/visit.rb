@@ -1,31 +1,51 @@
 class Visit < ApplicationRecord
+  require_dependency "activity_collection"
   INTERVAL = 10.minutes
   belongs_to :user
-  belongs_to :start_activity, class_name: "Activity"
-  belongs_to :stop_activity, class_name: "Activity"
-  has_many :activities
+
+  attribute :activities, ActivityCollection::Type.new, default: ActivityCollection.new
+  def self.start(user, activity)
+    visit = user.visits.create!(school_id: activity.school_id, seconds: 30)
+    visit << activity
+    visit
+  end
+
+  def last_activity
+    activities.most_recent
+  end
+  alias_method :stop_activity, :last_activity
+
+  def stop_at
+    stop_activity&.timestamp || Time.now.utc
+  end
+
+  def start_activity
+    activities.least_recent
+  end
+
+  def start_at
+    start_activity&.timestamp
+  end
 
   def minutes
     seconds / 6 / 10.0
   end
 
-  def self.start(user, activity)
-    Visit.create! school_id: activity.school_id,
-                  user: user,
-                  start_activity: activity,
-                  start_at: activity.created_at,
-                  stop_activity: activity,
-                  stop_at: activity.created_at,
-                  seconds: 30
+  def covers?(activity)
+    stop_at + Visit::INTERVAL > activity.timestamp
   end
 
-  def includes?(activity)
-    stop_at + Visit::INTERVAL > activity.created_at
+  def start_or_append(activity)
+    return append(activity) if covers?(activity)
+    Visit.start(user, activity)
+  end
+
+  def <<(activity)
+    append(activity)
   end
 
   def append(activity)
-    self.stop_activity = activity
-    self.stop_at = activity.created_at
+    self.activities << (activity)
     self.seconds = stop_at - start_at + 30
     save!
   end
