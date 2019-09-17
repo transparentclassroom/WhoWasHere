@@ -2,7 +2,7 @@ Rollbar.configure do |config|
   # Without configuration, Rollbar is enabled in all environments.
   # To disable in specific environments, set config.enabled=false.
 
-  config.access_token =  ENV['ROLLBAR_API_KEY']
+  config.access_token = ENV['ROLLBAR_API_KEY']
 
   # Here we'll disable in 'test':
   unless Rails.env.production?
@@ -29,7 +29,13 @@ Rollbar.configure do |config|
   # via the rollbar interface.
   # Valid levels: 'critical', 'error', 'warning', 'info', 'debug', 'ignore'
   # 'ignore' will cause the exception to not be reported at all.
-  # config.exception_level_filters.merge!('MyCriticalException' => 'critical')
+  config.exception_level_filters.merge!('MyCriticalException' => 'critical')
+  config.exception_level_filters.merge!(
+      'ActionController::RoutingError' => 'ignore',
+      'ActionController::UnknownFormat' => 'ignore',
+      'ActiveRecord::RecordNotFound' => 'ignore',
+  )
+
   #
   # You can also specify a callable, which will be called with the exception instance.
   # config.exception_level_filters.merge!('MyCriticalException' => lambda { |e| 'critical' })
