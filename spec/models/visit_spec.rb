@@ -33,4 +33,37 @@ RSpec.describe Visit, type: :model do
         })
     end
   end
+
+  describe "#append(activity)" do
+    it "Adds to the activities collection" do
+      visit = Visit.new(user: FactoryBot.create(:user))
+      activity = Activity.new(timestamp: Time.zone.now)
+      visit.append(activity)
+
+      aggregate_failures do
+        expect(visit.activities.length).to eql(1)
+        expect(visit.activities).to include(activity)
+        expect(visit.start_activity).to eql(activity)
+        expect(visit.stop_activity).to eql(activity)
+        expect(visit.seconds).to eql(Visit::DEFAULT_DURATION)
+      end
+    end
+
+    it "Pushes out the seconds" do
+      visit = Visit.new(user: FactoryBot.create(:user))
+      first = Activity.new(timestamp: 30.seconds.ago)
+      visit.append(first)
+      second = Activity.new(timestamp: 0.seconds.ago)
+      visit.append(second)
+
+      aggregate_failures do
+        expect(visit.activities.length).to eql(2)
+        expect(visit.activities).to include(first)
+        expect(visit.activities).to include(second)
+        expect(visit.start_activity).to eql(first)
+        expect(visit.stop_activity).to eql(second)
+        expect(visit.seconds).to eql(60)
+      end
+    end
+  end
 end

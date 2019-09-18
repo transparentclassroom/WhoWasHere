@@ -1,11 +1,22 @@
 class Visit < ApplicationRecord
   require_dependency "activity_collection"
+  DEFAULT_DURATION = 30
   INTERVAL = 10.minutes
   belongs_to :user
 
-  attribute :activities, ActivityCollection::Type.new, default: ActivityCollection.new
+  attribute :start_at, Timestamp::Type.new
+  attribute :end_at, Timestamp::Type.new
+
+  before_save :update_start_and_end_at
+
+  def update_start_and_end_at
+    self.start_at = start_activity&.timestamp
+    self.stop_at = stop_activity&.timestamp
+  end
+
+  attribute :activities, ActivityCollection::Type.new
   def self.start(user, activity)
-    visit = user.visits.create!(school_id: activity.school_id, seconds: 30)
+    visit = user.visits.create!(school_id: activity.school_id, seconds: DEFAULT_DURATION)
     visit << activity
     visit
   end
@@ -16,7 +27,7 @@ class Visit < ApplicationRecord
   alias_method :stop_activity, :last_activity
 
   def stop_at
-    stop_activity&.timestamp || Time.now.utc
+    super || stop_activity&.timestamp || Time.zone.now
   end
 
   def start_activity
@@ -24,7 +35,7 @@ class Visit < ApplicationRecord
   end
 
   def start_at
-    start_activity&.timestamp
+    super || start_activity&.timestamp
   end
 
   def minutes
@@ -32,13 +43,16 @@ class Visit < ApplicationRecord
   end
 
   def covers?(activity)
-    stop_at + Visit::INTERVAL > activity.timestamp
+    school_id == activity.school_id &&
+      (stop_at + Visit::INTERVAL).after?(activity.timestamp)
   end
 
   def start_or_append(activity)
-    byebug
-    return append(activity) if covers?(activity)
-    Visit.start(user, activity)
+    if covers?(activity)
+      append(activity)
+    else
+      Visit.start(user, activity)
+    end
   end
 
   def <<(activity)
@@ -47,8 +61,8 @@ class Visit < ApplicationRecord
 
   def append(activity)
     self.activities << (activity)
-    self.seconds = stop_at - start_at + 30
-    save!
+    self.update!(seconds: (stop_at.to_time - start_at.to_time) + DEFAULT_DURATION)
+    self
   end
 
   SPARKLINE_WINDOW = 14 # in days

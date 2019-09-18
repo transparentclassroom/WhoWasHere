@@ -1,7 +1,7 @@
 # A sequence of activities ordered by timestamp
 class ActivityCollection
   attr_accessor :activities
-  delegate :map, :each, to: :activities
+  delegate :include?, :map, :each, :length, :[], to: :activities
 
   def initialize(activities = [])
     self.activities = activities
@@ -10,22 +10,25 @@ class ActivityCollection
   def least_recent
     activities.last
   end
+  alias_method :first, :least_recent
 
   def most_recent
     activities.first
   end
+  alias_method :last, :most_recent
 
   def <<(activity)
     splice(activity.respond_to?(:timestamp) ? activity : Activity.new(activity))
   end
 
   private def splice(activity)
-    splice_point = activities.index { |other| other.timestamp > activity.timestamp }
-    if splice_point
-      activities.insert(splice_point, activity)
-    else
-      activities.unshift(activity)
-    end
+    activities.unshift(activity)
+    activities.sort!
+    self
+  end
+
+  def to_s
+    to_h.to_s
   end
 
   class Type < ActiveModel::Type::Value

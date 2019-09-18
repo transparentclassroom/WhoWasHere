@@ -23,7 +23,6 @@ RSpec.describe LogsController, type: :controller do
       expect(response).to be_successful
 
       visits = Visit.all
-      byebug
       expect(visits.length).to eq 2
       expect(visits[0].user_id).to eq(55)
       expect(visits[0].activities.most_recent.name).to eq("GET /s/973/dashboard")

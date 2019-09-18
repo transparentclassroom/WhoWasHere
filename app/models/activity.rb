@@ -3,7 +3,7 @@ class Activity
   include ActiveModel::Attributes
   attr_accessor :school_id, :name
 
-  attribute :timestamp, Timestamp::Type.new, precision: 6
+  attribute :timestamp, Timestamp::Type.new
 
   def self.log(user, school_id, name, time)
     activity = new(school_id: school_id, name: name, timestamp: time)
@@ -15,6 +15,10 @@ class Activity
     calc_activity_type(name)
   end
 
+  def <=>(other)
+    other.timestamp <=> timestamp
+  end
+
   def to_h
     {
       school_id: school_id,
@@ -23,8 +27,16 @@ class Activity
     }
   end
 
+  def inspect
+    "#<#{self.class.name} #{to_h}>"
+  end
+
   def eql?(other)
-    to_h.values.map(&:to_s) == other.to_h.values.map(&:to_s)
+    self.==(other)
+  end
+
+  def ==(other)
+    to_h == other.to_h
   end
 
   private
