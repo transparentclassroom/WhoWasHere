@@ -115,4 +115,13 @@ Rails.application.configure do
     name: ENV["WHOWASHERE_USER"],
     password: ENV["WHOWASHERE_PASSWORD"],
   }
+
+  Rails.configuration.aws = {
+      region: ENV['AMAZON_REGION'],
+      credentials: Aws::Credentials.new(ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY']),
+  }
+
+  Aws.config.update Rails.configuration.aws
+
+  ::ACTIVITY_ARCHIVE_BUCKET = Aws::S3::Bucket.new('activity-archive.transparentclassroom.com')
 end

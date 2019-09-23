@@ -61,4 +61,13 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   BASIC_AUTH = {name: "me", password: "letmein"}
+
+  Rails.configuration.aws = {
+      region: 'us-east-1',
+      credentials: Aws::Credentials.new(ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY']),
+  }
+
+  Aws.config.update Rails.configuration.aws
+
+  ::ACTIVITY_ARCHIVE_BUCKET = Aws::S3::Bucket.new('activity-archive.transparentclassroom.com')
 end
