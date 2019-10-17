@@ -3,6 +3,7 @@ require "json"
 class LogParser
   DATE_PATTERN = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[\d\.]{2,9}[+-]\d{2}:\d{2}'
   REQUEST_ID_PATTERN = '\[\w{8}-\w{4}-\w{4}-\w{4}-\w{12}\]'
+  REMOTE_IP_PATTERN = '\[[\d:\.]+\]'
 
   attr_reader :last_time
 
@@ -13,10 +14,15 @@ class LogParser
       return nil if app == "heroku"
       return nil unless proc.start_with?("web")
 
-      return nil unless content =~ /#{REQUEST_ID_PATTERN} (.+)$/
+      request_content = if content =~ /#{REQUEST_ID_PATTERN} #{REMOTE_IP_PATTERN} (.+)$/
+                          $1.strip
+                        elsif content =~ /#{REQUEST_ID_PATTERN} (.+)$/
+                          $1.strip
+                        else
+                          nil
+                        end
 
-      request_content = $1.strip
-      return nil unless request_content.start_with?("{") && request_content.end_with?("}")
+      return nil unless request_content && request_content.start_with?("{") && request_content.end_with?("}")
 
       begin
         JSON.parse(request_content)

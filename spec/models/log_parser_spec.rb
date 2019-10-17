@@ -51,6 +51,11 @@ RSpec.describe LogParser do
       expect(parser.last_time).to eq("2019-09-13T17:32:44.283037+00:00")
     end
 
+    it "should parse json when remote_ip is present" do
+      log = "467 <190>1 2019-09-13T17:32:44.283037+00:00 host app web.2 - I, [2019-09-13T17:32:40.612675 #36]  INFO -- : [3b45e5b2-7cc8-4fb4-8d2f-26c3587bc736] [123.123.123.456] {\"method\":\"GET\",\"path\":\"/s/369/classrooms/2313/events.json\",\"format\":\"json\",\"controller\":\"EventsController\",\"action\":\"index\",\"status\":200,\"duration\":135.07,\"view\":0.25,\"db\":102.07,\"user\":\"kmc@gmail.com\",\"school\":369,\"params\":{\"since\":\"2019-09-13T13:31:36-04:00\",\"school_id\":\"369\",\"classroom_id\":\"2313\"}}"
+      expect(parser.parse_line(log)['path']).to eq("/s/369/classrooms/2313/events.json")
+    end
+
     it "should ignore invalid lines" do
       log = "289 <190>1 2019-09-13T17:31:38.888083+00:00 host app worker.3 - I, [2019-09-13T17:31:38.547618 #4]  INFO -- : [ActiveJob] [DelayedPaperclip::ProcessJob] [f22e2e8c-58e4-4151-b2cc-df72d4fd1a1b] [paperclip] saving schools/373/2019/posts/efdec064b48657d383fed1eef42aaf69654771df.medium_square.jpg"
       expect(parser.parse_line(log)).to eq nil
