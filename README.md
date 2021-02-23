@@ -24,6 +24,12 @@ Logs are uploaded monthly to S3. To download them, look at [Downloading Logs](ht
 
 It's just a rails app. `rails s` will start it on `http://localhost:5000`
 
+The first time, you'll need to create a database and set it all up:
+
+```
+rake db:create db:migrate db:seed
+```
+
 ### Running tests
 
 `rake` will run all tests
