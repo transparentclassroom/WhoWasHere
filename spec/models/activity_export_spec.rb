@@ -95,7 +95,7 @@ describe ActivityExport do
 
     it "uploads the previous months activities the the archive repository" do
       archive = instance_double(ActivityExport::Archive, upload: true, archived?: false, content_length: 100)
-      export = new_export(archive: archive)
+      export = new_export(archive: archive, start_date: Time.zone.yesterday.beginning_of_month - 1.month)
       allow(export).to receive(:psql_export_to_csv) do |query_sql:, file:|
         file.write <<~CSV
           user_id,school_id,activity_type,name,created_at
@@ -111,7 +111,7 @@ describe ActivityExport do
 
     it "should blow up if the file that is generated is less than 80 bytes" do
       archive = instance_double(ActivityExport::Archive, archived?: false)
-      export = new_export(archive: archive)
+      export = new_export(archive: archive, start_date: Time.zone.yesterday.beginning_of_month - 1.month)
       allow(export).to receive(:psql_export_to_csv) do |query_sql:, file:|
         file.write <<~CSV
           user_id,school_id,activity_type,name,created_at
@@ -122,7 +122,7 @@ describe ActivityExport do
 
     it "should blow up if the file that is uploaded is less than 80 bytes" do
       archive = instance_double(ActivityExport::Archive, upload: true, archived?: false, content_length: 79)
-      export = new_export(archive: archive)
+      export = new_export(archive: archive, start_date: Time.zone.yesterday.beginning_of_month - 1.month)
       allow(export).to receive(:psql_export_to_csv) do |query_sql:, file:|
         file.write <<~CSV
           user_id,school_id,activity_type,name,created_at
