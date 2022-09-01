@@ -36,7 +36,7 @@ gem "kaminari" # pagination
 
 gem "rack-cors"
 
-gem "omniauth"
+gem "omniauth", "~>2.1.0"
 gem "omniauth-google-oauth2"
 
 gem 'aws-sdk', "~> 2"
