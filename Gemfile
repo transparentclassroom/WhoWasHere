@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read('.ruby-version').strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.0.0"
+gem "rails", "~> 6.1.7"
 # Use sqlite3 as the database for Active Record
 gem "pg"
 # Use Puma as the app server
@@ -45,7 +45,7 @@ gem 'aws-sdk-s3'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
-  gem "rspec-rails", "~> 3.8"
+  gem "rspec-rails", '~>4.0'
   gem "rails-controller-testing"
   gem "factory_bot_rails"
 end
