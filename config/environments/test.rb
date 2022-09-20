@@ -47,6 +47,4 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   ::BASIC_AUTH = {name: "me", password: "letmein"}
-
-  ::ACTIVITY_ARCHIVE_BUCKET = FakeS3::Bucket.new('activity_archive.transparentclassroom.com')
 end

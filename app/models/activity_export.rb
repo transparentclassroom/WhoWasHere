@@ -14,6 +14,7 @@ class ActivityExport
   # @return Boolean
   def generate
     return false if unnecessary? || premature?
+
     generate_locally
     upload
     true
