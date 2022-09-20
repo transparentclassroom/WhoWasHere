@@ -40,7 +40,7 @@ gem "omniauth", "~>2.1.0"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"
 
-gem 'aws-sdk', "~> 2"
+gem 'aws-sdk-s3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
