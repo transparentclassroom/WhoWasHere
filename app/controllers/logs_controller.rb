@@ -2,7 +2,7 @@ class LogsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create
   skip_before_action :verify_authenticated, only: :create
 
-  http_basic_authenticate_with BASIC_AUTH.merge(only: :create)
+  http_basic_authenticate_with name: BASIC_AUTH[:name], password: BASIC_AUTH[:password], only: :create
 
   def create
     parser = LogParser.new
