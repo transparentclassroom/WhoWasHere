@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Activity, type: :model do
+  it { is_expected.to belong_to(:visit).optional }
+  it { is_expected.to have_one(:user).through(:visit) }
+  it { is_expected.to delegate_method(:id).to(:user).with_prefix.allow_nil }
+
   describe ".log" do
     let(:school_id) { 5 }
     let(:u) { FactoryBot.create(:user) }

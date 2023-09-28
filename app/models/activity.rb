@@ -1,9 +1,8 @@
 class Activity < ApplicationRecord
   self.ignored_columns = [:user_id]
   belongs_to :visit, optional: true # optional, because activity is created first, and exists for a moment w/o a visit
-  delegate :user, to: :visit, allow_nil: true
-  delegate :id, to: :user, prefix: true
-
+  has_one :user, through: :visit
+  delegate :id, to: :user, prefix: true, allow_nil: true
 
   def self.log(user, school_id, name, time)
     activity = Activity.create!(school_id: school_id, name: name, created_at: time)
