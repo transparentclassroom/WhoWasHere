@@ -3,8 +3,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby File.read('.ruby-version').strip
 
+
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.7"
+gem "rails", "~> 6.1"
 # Use sqlite3 as the database for Active Record
 gem "pg"
 # Use Puma as the app server
@@ -21,6 +23,14 @@ gem "jquery-rails" # had to add for bootstrap :(
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+
+# These may be removed when we upgrade to Rails 7
+# It looks like Rails 6 doesn't play nice with Ruby 3.4
+require "logger"
+gem "base64"
+gem "bigdecimal"
+gem "drb"
+gem "mutex_m"
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
