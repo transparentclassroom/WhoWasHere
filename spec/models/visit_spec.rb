@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Visit, type: :model do
+  it { is_expected.to have_many(:activities).dependent(:destroy) }
+
   let(:school_id) { 5 }
   let(:user1) { FactoryBot.create(:user) }
   let(:user2) { FactoryBot.create(:user) }

@@ -3,7 +3,7 @@ class Visit < ApplicationRecord
   belongs_to :user
   belongs_to :start_activity, class_name: "Activity"
   belongs_to :stop_activity, class_name: "Activity"
-  has_many :activities
+  has_many :activities, dependent: :destroy
 
   def minutes
     seconds / 6 / 10.0
