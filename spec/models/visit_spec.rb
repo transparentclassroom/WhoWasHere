@@ -16,6 +16,37 @@ RSpec.describe Visit, type: :model do
     Visit.create! args
   end
 
+  describe ".destroy_before" do
+    it "destroys visits that ended before the provide date or time" do
+      ancient_activity = Activity.create(school_id:, name: "Something")
+      ancient_visit = create_visit!(
+        user: user1,
+        start_activity: ancient_activity,
+        start_at: 7.years.ago.beginning_of_day - 10.seconds,
+        stop_at: 7.years.ago.beginning_of_day - 1.second)
+      ancient_visit.activities << ancient_activity
+
+      not_quite_ancient_activity = Activity.create(school_id:, name: "Something")
+      not_quite_ancient_visit = create_visit!(
+        user: user1,
+        start_activity: not_quite_ancient_activity,
+        start_at: 7.years.ago.beginning_of_day - 10.seconds,
+        stop_at: 7.years.ago.beginning_of_day)
+
+      not_quite_ancient_visit.activities << not_quite_ancient_activity
+
+      expect(Visit).to exist(id: ancient_visit.id)
+      expect(Visit).to exist(id: not_quite_ancient_visit.id)
+
+      Visit.destroy_before(7.years.ago.beginning_of_day)
+
+      expect(Visit).not_to  exist(id: ancient_visit.id)
+      expect(Activity).not_to exist(visit_id: ancient_visit.id)
+      expect(Visit).to exist(id: not_quite_ancient_visit.id)
+      expect(Activity).to exist(visit_id: not_quite_ancient_visit.id)
+    end
+  end
+
   describe "sparkline_by_user" do
     it "should return minutes per day" do
       Time.zone = "UTC"

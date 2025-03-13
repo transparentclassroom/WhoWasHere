@@ -48,4 +48,8 @@ class Visit < ApplicationRecord
     end
     usage_by_user
   end
+
+  def self.destroy_before(date_time)
+    Visit.where("stop_at < ?", date_time).find_each(&:destroy)
+  end
 end
