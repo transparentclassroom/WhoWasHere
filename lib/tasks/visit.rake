@@ -14,7 +14,7 @@ end
 
 namespace :visit do
   desc "Truncates visits that ended more than VISIT_TRUNCATION_PERIOD days ago"
-  task :truncate do
+  task truncate: [:environment] do
     Visit.destroy_before(truncation_period.to_i.days.ago.beginning_of_day)
   end
 end
