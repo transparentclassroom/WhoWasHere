@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_28_230107) do
+ActiveRecord::Schema.define(version: 2025_03_18_225411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2023_09_28_230107) do
     t.string "name", limit: 255, null: false
     t.string "activity_type", null: false
     t.datetime "created_at"
+    t.index ["created_at"], name: "index_activities_on_created_at", order: :desc
     t.index ["visit_id"], name: "index_activities_on_visit_id"
   end
 
@@ -37,6 +38,7 @@ ActiveRecord::Schema.define(version: 2023_09_28_230107) do
     t.integer "seconds"
     t.integer "start_activity_id"
     t.integer "stop_activity_id"
+    t.index ["stop_at"], name: "index_visits_on_stop_at", order: :desc
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
